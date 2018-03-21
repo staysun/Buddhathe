@@ -1,0 +1,219 @@
+{% extends "menu.html" %}
+
+
+{% block main2 %}
+
+
+     <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+     <h1>   菜单管理
+        <small>查看菜单</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/index"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="/index">查看菜单</a></li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">查看菜单</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>id</th>
+                  <th>菜单名称</th>
+                    <th>url</th>
+                    <th>操作</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+
+                     {% for first in menu %}
+                     <tr id={{ first.id }}>
+                          <td>{{ first.id }}</td>
+                         <td>{{ first.caption }}</td>
+                         <td>{{ first.url }}</td>
+
+                                         <td>
+
+               <button type="button" class="btn btn-danger btn-flat " data-toggle="modal" data-target="#modal-warning" onclick="delteMenu({{ first.id }});">
+                <i class="fa fa-bitbucket"></i> 删除
+              </button>
+              <button type="button" class="btn btn-success btn-flat" data-toggle="modal" data-target="#modal-success" onclick="editMenu({{ first.id }});">
+                <i class="fa fa-edit"></i> 修改
+              </button>
+
+                </td>
+
+                 </tr>
+                   {% for second in first.children %}
+                    {% if not second.children %}
+					       <tr id={{ second.id }} >
+                          <td>{{ second.id }}</td>
+                         <td>&nbsp;&nbsp;&nbsp;&nbsp;|—{{ second.caption }}</td>
+                         <td>{{ second.url }}</td>
+                               <td>
+               <button type="button" class="btn btn-danger btn-flat " data-toggle="modal" data-target="#modal-warning" onclick="delteMenu({{ second.id }});">
+                <i class="fa fa-bitbucket"></i> 删除
+              </button>
+              <button type="button" class="btn btn-success btn-flat" data-toggle="modal" data-target="#modal-success" onclick="editMenu({{ second.id }});">
+                <i class="fa fa-edit"></i> 修改
+              </button>
+                           </td>
+
+                         </tr>
+
+                        {% else %}
+                        <tr id={{ second.id }}>
+                          <td>{{ second.id }}</td>
+                         <td>&nbsp;&nbsp;&nbsp;&nbsp;|—{{ second.caption }}</td>
+                         <td>{{ second.url }}</td>
+                <td>
+               <button type="button" class="btn btn-danger btn-flat " data-toggle="modal" data-target="#modal-warning" onclick="delteMenu({{ second.id }});">
+                <i class="fa fa-bitbucket"></i> 删除
+              </button>
+              <button type="button" class="btn btn-success btn-flat" data-toggle="modal" data-target="#modal-success" onclick="editMenu({{ second.id }});">
+                <i class="fa fa-edit"></i> 修改
+              </button>
+                           </td>
+                         </tr>
+						 {% for third in second.children %}
+						<tr id={{ third.id }}>
+                          <td>{{ third.id }}</td>
+                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|——{{ third.caption }}</td>
+                         <td>{{ third.url }}</td>
+                                                       <td>
+               <button type="button" class="btn btn-danger btn-flat " data-toggle="modal" data-target="#modal-warning" onclick="delteMenu({{ third.id }});">
+                <i class="fa fa-bitbucket"></i> 删除
+              </button>
+              <button type="button" class="btn btn-success btn-flat" data-toggle="modal" data-target="#modal-success" onclick="editMenu({{ third.id }});">
+                <i class="fa fa-edit"></i> 修改
+              </button>
+                           </td>
+                         </tr>
+                        {% endfor %}
+                       {% endif %}
+                       {% endfor %}
+                     {% endfor %}
+
+
+
+
+
+
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th>id</th>
+                  <th>菜单名称</th>
+                    <th>url</th>
+                    <th>操作</th>
+
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+
+
+
+{% endblock %}
+
+
+{% block js %}
+ {% load static %}
+    <!-- DataTables -->
+<script src="{% static "bower_components/datatables.net/js/jquery.dataTables.min.js" %}" ></script>
+<script src="{% static "bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js" %}"></script>
+    <script>
+
+
+    function delteMenu(id) {
+
+        if(confirm("确认删除吗？")) // 弹出提示框  确认是够删除
+            {
+                if(!id)
+                {
+                    alert('Error！');
+                    return false;
+                }
+                //  $("#"+id).remove();   删除之后  js 会重新显示数据   已经删除
+                $("#"+id).empty();   // 删除之后 js 的分页器   不会重新显示
+
+
+                    $.ajax({
+                url: '/del_menu/',
+                type: 'POST',
+                 data: {'id':id},
+                dataType: 'JSON',
+                success:function (arg) {
+                    if(arg.status){
+                        alert('成功！');
+                    }else{
+                        alert('删除失败');
+                    }
+                }
+            })
+
+
+
+
+
+            }
+        else {
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+        function editMenu() {
+        }
+
+
+    </script>
+
+    <script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : false,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+{% endblock %}

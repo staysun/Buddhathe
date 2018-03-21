@@ -1,0 +1,85 @@
+
+{% extends "menu.html" %}
+
+
+{% block main2 %}
+{% load static %}
+{#<div class="content-wrapper">#}
+
+
+
+{#          <div class="box box-primary">#}
+              <div class="content-wrapper">
+            <div class="box-header with-border">
+              <h3 class="box-title">增加主机</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form"  method="post" id="addhost" novalidate>
+                {% csrf_token %}
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">主机名</label>
+                        {{ host_form.hostname }}
+                </div>
+                  <div class="form-group">
+                  <label for="exampleInputEmail1">ip地址</label>
+                    {{ host_form.host_ip }}
+                </div>
+                  <div class="form-group">
+                  <label for="exampleInputEmail1">端口</label>
+                      {{ host_form.ssh_port }}
+                </div>
+                  <div class="form-group">
+                  <label for="exampleInputEmail1">业务线</label>
+                      {{ host_form.sl_id }}
+                </div>
+
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="button" class="btn btn-primary" onclick="submitForm();">Submit</button>
+              </div>
+            </form>
+          </div>
+
+
+  </div>
+
+    <script src="{% static "bower_components/jquery/dist/jquery.min.js" %} "></script>
+    <script>
+        function submitForm() {
+            $('#addhost .error').remove();
+
+            $.ajax({
+                url: '/add_host/',
+                type: 'POST',
+                data: $('#addhost').serialize(),
+                dataType: 'JSON',
+                success:function (arg) {
+                    if(arg.status){
+                        location.href = "/index/";
+                    }else{
+                        /*
+                        arg.msg = {
+                            email: ['xxxxx',]
+                            password: ['xxxxx',]
+                            user: ['xxxxx',]
+                        }
+                         */
+                        $.each(arg.msg,function (k,v) {
+                            var tag = document.createElement('span');
+                            tag.innerHTML = v[0];
+                            tag.className = "error";
+                            // <span class='error'>v[0]</span>
+                            $('#addhost input[name="'+k+'"]').after(tag);
+                        })
+                    }
+                }
+            })
+        }
+    </script>
+
+
+{% endblock %}

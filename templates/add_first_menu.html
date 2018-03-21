@@ -1,0 +1,82 @@
+{% extends "menu.html" %}
+
+
+{% block main2 %}
+
+{#<div class="content-wrapper">#}
+
+
+
+{#          <div class="box box-primary">#}
+              <div class="content-wrapper">
+            <div class="box-header with-border">
+              <h3 class="box-title">增加菜单</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form" id="add_menu" novalidate>
+                {% csrf_token %}
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">目录名称</label>
+                  {{ Menu_form.caption }}
+                </div>
+
+
+                 <div class="form-group">
+                  <label for="exampleInputEmail1">url</label>
+                  {{ Menu_form.url }}
+                </div>
+
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="button" class="btn btn-primary" onclick="submitForm();">提交</button>
+              </div>
+            </form>
+          </div>
+
+
+
+  </div>
+
+
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        function submitForm() {
+            $('#add_menu .error').remove();
+
+            $.ajax({
+                url: '/add_menu/',
+                type: 'POST',
+                data: $('#add_menu').serialize(),
+                dataType: 'JSON',
+                success:function (arg) {
+                    if(arg.status){
+                        location.href = "/show_menu/";
+                    }else{
+                        /*
+                        arg.msg = {
+                            email: ['xxxxx',]
+                            password: ['xxxxx',]
+                            user: ['xxxxx',]
+                        }
+                         */
+                        $.each(arg.msg,function (k,v) {
+                            var tag = document.createElement('span');
+                            tag.innerHTML = v[0];
+                            tag.className = "error";
+                            // <span class='error'>v[0]</span>
+                            $('#add_menu input[name="'+k+'"]').after(tag);
+                        })
+                    }
+                }
+            })
+        }
+    </script>
+
+{% endblock %}

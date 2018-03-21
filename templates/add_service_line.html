@@ -1,0 +1,39 @@
+{% extends "menu.html" %}
+
+
+{% block main2 %}
+
+{#<div class="content-wrapper">#}
+
+
+
+{#          <div class="box box-primary">#}
+              <div class="content-wrapper">
+            <div class="box-header with-border">
+              <h3 class="box-title">增加业务线</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form" action="/add_service_line" method="post">
+                {% csrf_token %}
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">业务线名称</label>
+                  <input  formmethod="post" type="text" class="form-control" id="exampleInputEmail1" placeholder="业务线名称" name="sl_name">
+                </div>
+
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+
+
+
+  </div>
+
+
+{% endblock %}

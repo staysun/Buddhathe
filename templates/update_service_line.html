@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+
+{% block content2 %}
+
+{#<div class="content-wrapper">#}
+
+
+
+          <div class="box box-primary">
+              <div class="content-wrapper">
+            <div class="box-header with-border">
+              <h3 class="box-title">修改业务线</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form" action="/update_service_line" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value={{ sl_obj.id }}>
+                <div class="box-body">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">业务线id</label>
+                  <input   type="text" class="form-control" id="exampleInputEmail1"  name="id" value={{ sl_obj.id }}  disabled>
+                </div>
+
+              </div>
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">业务线名称</label>
+                  <input   type="text" class="form-control" id="exampleInputEmail1"  name="sl_name" value={{ sl_obj.service_line_name }} >
+                </div>
+
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+
+
+
+  </div>
+
+
+{% endblock %}
